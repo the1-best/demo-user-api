@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-user-api
+  namespace: demo-api-dev
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: demo-user-api
+  template:
+    metadata:
+      labels:
+        app: demo-user-api
+    spec:
+      containers:
+      - name: demo-user-api
+        image: sarayutorion/demo-user-api:latest
+        imagePullPolicy: Always
+        env:
+          - name: spring_profiles_active
+            value: "dev"
+        ports:
+          - containerPort: 8082
+            protocol: TCP
+        resources: {}
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
